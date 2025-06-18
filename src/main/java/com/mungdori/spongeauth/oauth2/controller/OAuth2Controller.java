@@ -8,20 +8,24 @@ import com.mungdori.spongeauth.oauth2.controller.response.TrainerOauth2Response;
 import com.mungdori.spongeauth.oauth2.controller.response.UserOauth2Response;
 import com.mungdori.spongeauth.oauth2.dto.LoginRequest;
 import com.mungdori.spongeauth.oauth2.service.KaKaoService;
-import com.mungdori.spongeauth.oauth2.service.LoginOAuth2;
+import com.mungdori.spongeauth.oauth2.dto.LoginOAuth2;
 import com.mungdori.spongeauth.oauth2.service.OAuth2Service;
+import com.mungdori.spongeauth.trainer.dto.TrainerCreate;
+import com.mungdori.spongeauth.trainer.dto.TrainerResponse;
 import com.mungdori.spongeauth.user.dto.UserResponse;
+import com.mungdori.spongeauth.utils.LoginType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class OAuth2Controller {
 
@@ -42,17 +46,29 @@ public class OAuth2Controller {
 
     }
 
-//    @PostMapping("/kakao/trainer")
-//    public ResponseEntity<TrainerOauth2Response> authTrainerKaKao(@RequestBody LoginRequest loginRequest) {
-//        LoginOAuth2 loginOAuth2 = kaKaoService.getKaKaoInfo(loginRequest.getAccessToken());
-//        Trainer trainer = oAuth2Service.checkTrainer(loginOAuth2);
-//        if (trainer == null) {
-//            return ResponseEntity.ok().body(TrainerOauth2Response.register(loginOAuth2, false));
-//        } else {
-//            Token token = jwtUtil.createToken(trainer.getId(), trainer.getName(), loginRequest.getLoginType());
-//            refreshRepository.save(token.getRefreshToken());
-//            return ResponseEntity.ok().header("Authorization", token.getAccessToken())
-//                    .body(TrainerOauth2Response.login(trainer, true, token.getRefreshToken()));
-//        }
-//    }
+    @PostMapping("/kakao/trainer")
+    public ResponseEntity<TrainerOauth2Response> authTrainerKaKao(@RequestBody LoginRequest loginRequest) {
+        LoginOAuth2 loginOAuth2 = kaKaoService.getKaKaoInfo(loginRequest.getAccessToken());
+        Optional<TrainerResponse> trainer = oAuth2Service.getTrainer(loginOAuth2);
+        if (trainer.isEmpty()) {
+            return ResponseEntity.ok().body(TrainerOauth2Response.register(loginOAuth2, false));
+        } else {
+            TrainerResponse trainerResponse = trainer.get();
+            Token token = jwtUtil.createToken(trainerResponse.getId(), trainerResponse.getName(), loginRequest.getLoginType());
+            refreshRepository.save(token.getRefreshToken());
+            return ResponseEntity.ok().header("Authorization", token.getAccessToken())
+                    .body(TrainerOauth2Response.login(trainerResponse, true, token.getRefreshToken()));
+        }
+    }
+
+    @PostMapping("/trainer")
+    public ResponseEntity<TrainerResponse> createTrainer(@RequestBody TrainerCreate trainerCreate) {
+        TrainerResponse trainerResponse = oAuth2Service.saveTrainer(trainerCreate);
+        Token token = jwtUtil.createToken(trainerResponse.getId(), trainerResponse.getName(), LoginType.TRAINER.getLoginType());
+        refreshRepository.save(token.getRefreshToken());
+        return ResponseEntity.ok().header("Authorization", token.getAccessToken())
+                .body(trainerResponse);
+    }
+
+
 }

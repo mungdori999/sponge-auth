@@ -1,4 +1,4 @@
-package com.mungdori.spongeauth.oauth2.service;
+package com.mungdori.spongeauth.oauth2.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

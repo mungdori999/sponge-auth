@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "user-service", url = "http://localhost:8081/api/user")
+@FeignClient(name = "user-service", url = "http://localhost:8081")
 public interface UserClient {
 
-    @GetMapping()
-    UserResponse getByEmail(@RequestParam("email")String email);
+    @GetMapping("/api/user")
+    UserResponse getByEmail(@RequestParam("email") String email);
 
-    @PostMapping
+    @PostMapping("/api/user")
     UserResponse createUser(@RequestBody UserCreate userCreate);
 
 }

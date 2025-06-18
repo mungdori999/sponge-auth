@@ -1,5 +1,7 @@
 package com.mungdori.spongeauth.oauth2.service;
 
+import com.mungdori.spongeauth.exception.CreateException;
+import com.mungdori.spongeauth.oauth2.dto.LoginOAuth2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,8 +36,7 @@ public class KaKaoService {
 
             return new LoginOAuth2(name, email);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+           throw new CreateException();
         }
     }
 }

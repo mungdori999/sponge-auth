@@ -1,7 +1,7 @@
 package com.mungdori.spongeauth.oauth2.controller.response;
 
-import com.petweb.sponge.oauth2.service.LoginOAuth2;
-import com.petweb.sponge.trainer.domain.Trainer;
+import com.mungdori.spongeauth.oauth2.dto.LoginOAuth2;
+import com.mungdori.spongeauth.trainer.dto.TrainerResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +15,8 @@ public class TrainerOauth2Response {
     private boolean login;
     private String refreshToken;
 
-    public static TrainerOauth2Response register(LoginOAuth2 loginOAuth2,boolean login) {
+
+    public static TrainerOauth2Response register(LoginOAuth2 loginOAuth2, boolean login) {
         return TrainerOauth2Response.builder()
                 .email(loginOAuth2.getEmail())
                 .name(loginOAuth2.getName())
@@ -23,7 +24,7 @@ public class TrainerOauth2Response {
                 .build();
     }
 
-    public static TrainerOauth2Response login(Trainer trainer, boolean login, String refreshToken) {
+    public static TrainerOauth2Response login(TrainerResponse trainer, boolean login, String refreshToken) {
         return TrainerOauth2Response.builder()
                 .id(trainer.getId())
                 .name(trainer.getName())
@@ -31,4 +32,5 @@ public class TrainerOauth2Response {
                 .refreshToken(refreshToken)
                 .build();
     }
+
 }
