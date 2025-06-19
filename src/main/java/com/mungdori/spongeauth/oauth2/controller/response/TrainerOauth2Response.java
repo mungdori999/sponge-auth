@@ -27,6 +27,7 @@ public class TrainerOauth2Response {
     public static TrainerOauth2Response login(TrainerResponse trainer, boolean login, String refreshToken) {
         return TrainerOauth2Response.builder()
                 .id(trainer.getId())
+                .email(trainer.getEmail())
                 .name(trainer.getName())
                 .login(login)
                 .refreshToken(refreshToken)

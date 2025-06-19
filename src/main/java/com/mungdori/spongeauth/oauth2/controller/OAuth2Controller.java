@@ -3,6 +3,7 @@ package com.mungdori.spongeauth.oauth2.controller;
 
 import com.mungdori.spongeauth.jwt.JwtUtil;
 import com.mungdori.spongeauth.jwt.RefreshRepository;
+import com.mungdori.spongeauth.jwt.RefreshToken;
 import com.mungdori.spongeauth.jwt.Token;
 import com.mungdori.spongeauth.oauth2.controller.response.TrainerOauth2Response;
 import com.mungdori.spongeauth.oauth2.controller.response.UserOauth2Response;
@@ -16,10 +17,7 @@ import com.mungdori.spongeauth.user.dto.UserResponse;
 import com.mungdori.spongeauth.utils.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -46,6 +44,11 @@ public class OAuth2Controller {
 
     }
 
+    /**
+     * 훈련사 카카오 로그인
+     * @param loginRequest
+     * @return
+     */
     @PostMapping("/kakao/trainer")
     public ResponseEntity<TrainerOauth2Response> authTrainerKaKao(@RequestBody LoginRequest loginRequest) {
         LoginOAuth2 loginOAuth2 = kaKaoService.getKaKaoInfo(loginRequest.getAccessToken());
@@ -61,13 +64,23 @@ public class OAuth2Controller {
         }
     }
 
+    /**
+     * 훈련사 가입
+     * @param trainerCreate
+     * @return
+     */
     @PostMapping("/trainer")
-    public ResponseEntity<TrainerResponse> createTrainer(@RequestBody TrainerCreate trainerCreate) {
+    public ResponseEntity<TrainerOauth2Response> createTrainer(@RequestBody TrainerCreate trainerCreate) {
         TrainerResponse trainerResponse = oAuth2Service.saveTrainer(trainerCreate);
         Token token = jwtUtil.createToken(trainerResponse.getId(), trainerResponse.getName(), LoginType.TRAINER.getLoginType());
         refreshRepository.save(token.getRefreshToken());
         return ResponseEntity.ok().header("Authorization", token.getAccessToken())
-                .body(trainerResponse);
+                .body(TrainerOauth2Response.login(trainerResponse,true,token.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshToken refreshToken) {
+        refreshRepository.deleteByRefresh(refreshToken.getRefreshToken());
     }
 
 

@@ -29,7 +29,7 @@ public class OAuth2Service {
                     .name(loginOAuth2.getName())
                     .email(loginOAuth2.getEmail()).build();
             try {
-                return userClient.createUser(user);
+                return userClient.create(user);
             } catch (FeignException ex) {
                 throw new CreateException();
             }

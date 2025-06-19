@@ -12,7 +12,7 @@ import static com.mungdori.spongeauth.exception.ExceptionCode.*;
 public class CreateExceptionHandler {
 
 
-    @ExceptionHandler(CreateException.class)
+    @ExceptionHandler({CreateException.class, UpdateException.class})
     public ResponseEntity<ResponseError> handleNotFoundAccountException() {
         return new ResponseEntity<>(new ResponseError(BAD_CREATION.getCode(), BAD_CREATION.getMessage())
                 , HttpStatus.BAD_REQUEST);

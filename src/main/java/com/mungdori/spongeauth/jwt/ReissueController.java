@@ -29,8 +29,7 @@ public class ReissueController {
         if (!refreshRepository.existsByRefresh(refreshToken)) {
             return new ResponseEntity<>(
                     new ResponseError(EXPIRE_REFRESH_TOKEN.getCode(), EXPIRE_REFRESH_TOKEN.getMessage()),
-                    HttpStatus.UNAUTHORIZED);
-        }
+                    HttpStatus.UNAUTHORIZED);}
         try {
             jwtUtil.isExpired(refreshToken);
         } catch (ExpiredJwtException e) {
