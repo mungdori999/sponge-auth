@@ -2,11 +2,9 @@ package com.mungdori.spongeauth.trainer.client;
 
 import com.mungdori.spongeauth.trainer.dto.TrainerCreate;
 import com.mungdori.spongeauth.trainer.dto.TrainerResponse;
+import com.mungdori.spongeauth.trainer.dto.TrainerUpdate;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "trainer-service", url = "http://localhost:8081")
 public interface TrainerClient {
@@ -17,5 +15,8 @@ public interface TrainerClient {
 
     @PostMapping("/api/trainer")
     TrainerResponse save(@RequestBody TrainerCreate trainerCreate);
+
+    @PatchMapping("/api/trainer/{id}")
+    TrainerResponse update(@PathVariable Long id, @RequestBody TrainerUpdate trainerUpdate);
 
 }
