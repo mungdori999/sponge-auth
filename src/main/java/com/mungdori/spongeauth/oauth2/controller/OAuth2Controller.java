@@ -46,6 +46,7 @@ public class OAuth2Controller {
 
     /**
      * 훈련사 카카오 로그인
+     *
      * @param loginRequest
      * @return
      */
@@ -66,6 +67,7 @@ public class OAuth2Controller {
 
     /**
      * 훈련사 가입
+     *
      * @param trainerCreate
      * @return
      */
@@ -75,7 +77,7 @@ public class OAuth2Controller {
         Token token = jwtUtil.createToken(trainerResponse.getId(), trainerResponse.getName(), LoginType.TRAINER.getLoginType());
         refreshRepository.save(token.getRefreshToken());
         return ResponseEntity.ok().header("Authorization", token.getAccessToken())
-                .body(TrainerOauth2Response.login(trainerResponse,true,token.getRefreshToken()));
+                .body(TrainerOauth2Response.login(trainerResponse, true, token.getRefreshToken()));
     }
 
     @PostMapping("/logout")
