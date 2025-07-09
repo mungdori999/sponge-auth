@@ -1,6 +1,6 @@
 package com.mungdori.spongeauth.trainer.controller;
 
-import com.mungdori.spongeauth.exception.UpdateException;
+import com.mungdori.spongeauth.exception.error.UpdateException;
 import com.mungdori.spongeauth.jwt.JwtUtil;
 import com.mungdori.spongeauth.jwt.RefreshRepository;
 import com.mungdori.spongeauth.jwt.RefreshToken;

@@ -80,6 +80,10 @@ public class OAuth2Controller {
                 .body(TrainerOauth2Response.login(trainerResponse, true, token.getRefreshToken()));
     }
 
+    /**
+     * 로그아웃
+     * @param refreshToken
+     */
     @PostMapping("/logout")
     public void logout(@RequestBody RefreshToken refreshToken) {
         refreshRepository.deleteByRefresh(refreshToken.getRefreshToken());
